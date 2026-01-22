@@ -37,7 +37,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Times New Roman', 'Inter', sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
             overflow-x: hidden;
@@ -126,7 +126,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 0.75rem 5%;
             background: rgba(248, 250, 252, 0.8);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(250, 0, 217, 0.1);
@@ -139,7 +139,7 @@
         }
 
         .nav-container {
-            max-width: 1400px;
+            max-width: 1000px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -157,14 +157,19 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
         }
 
         .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
             object-fit: cover;
+            flex-shrink: 0;
+             transform: scale(1.5) translateY(5px);
         }
+
 
         nav ul {
             display: flex;
@@ -176,9 +181,10 @@
         nav a {
             color: var(--text-dark);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 700;
             position: relative;
             transition: color 0.3s ease;
+            font-size: 22px;
         }
 
         nav a::after {
@@ -686,12 +692,12 @@
     <!-- Header -->
     <header>
         <div class="nav-container">
-            <a href="index" class="logo">
-                <img src="/logo.avif" alt="Nathalie Taffot">
+            <a href="/" class="logo">
+                <img src="/logo1.png" alt="Nathalie Taffot">
             </a>
             <nav>
                 <ul>
-                    <li><a href="index" class="active">Accueil</a></li>
+                    <li><a href="/" class="active">Accueil</a></li>
                     <li><a href="projects">Projets</a></li>
                     <li><a href="cv">CV</a></li>
                     <li><a href="formation">Formation</a></li>
