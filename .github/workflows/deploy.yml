@@ -36,10 +36,11 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }} # FTP username
           password: ${{ secrets.FTP_PASSWORD }} # FTP password
           protocol: ftps
-          port: 21
+          port: 22
           local-dir: ./
           server-dir: /www/
-          timeout: 300
+          timeout: 600
+          passive: true
           exclude: |
             **/.git*
             **/.git*/**
