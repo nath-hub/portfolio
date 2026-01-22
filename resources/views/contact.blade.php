@@ -301,6 +301,8 @@
                     <div class="social-icon linkedin">in</div>
                     <span>LinkedIn</span>
                 </a>
+
+
             </div>
         </div>
     </section>

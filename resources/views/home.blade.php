@@ -167,7 +167,7 @@
             border-radius: 8px;
             object-fit: cover;
             flex-shrink: 0;
-             transform: scale(1.5) translateY(5px);
+            transform: scale(1.5) translateY(5px);
         }
 
 
@@ -797,7 +797,7 @@
                 <a href="https://github.com/nath-hub" class="social-link" aria-label="GitHub">
                     <img src="/github.png" alt="GitHub">
                 </a>
-                <a href="linkedin.com/in/nathalie-taffot-0b6b931b4/" class="social-link" aria-label="LinkedIn">
+                <a href="https://linkedin.com/in/nathalie-taffot-0b6b931b4/" class="social-link" aria-label="LinkedIn">
                     <img src="/linkedlin.png" alt="LinkedIn">
                 </a>
                 <a href="#" class="social-link" aria-label="Twitter">
@@ -807,6 +807,7 @@
                     <img src="/gmail.webp" alt="Gmail">
                 </a>
 
+                <a href="tel:+237677851618">Tel: 677851619</a>
             </div>
         </div>
     </footer>
