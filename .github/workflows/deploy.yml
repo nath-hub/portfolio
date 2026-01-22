@@ -38,8 +38,10 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: ./
-          server-dir: /
+          server-dir: /www/
           timeout: 300
+          dry-run: false
+          secure: true
           exclude: |
             **/.git*
             **/.git*/**
