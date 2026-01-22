@@ -1,0 +1,271 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .smooth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --vert-principal: #F8FAFC;
+  --vert-hover: #2E7D32;
+  --bordeaux: #7B1E26;
+  --bordeaux-hover: #009414;
+}
+
+
+
+
+/* --- THÈME CLAIR (Par défaut) --- */
+:root {
+    /* Couleurs de base */
+    --bg-color: #FDFCF0;          /* Crème très clair (plus doux que le blanc) */
+    --surface-color: #FFFFFF;     /* Blanc pur pour les cartes/sections */
+    --text-main: #2D0505;         /* Bordeaux presque noir pour la lisibilité */
+    --text-secondary: #5C5C5C;    /* Gris neutre pour les textes secondaires */
+
+    /* Couleurs d'accentuation */
+    --primary: #6D071A;           /* Bordeaux */
+    --secondary: #A8E6CF;         /* Vert clair (Menthe) */
+    --secondary-muted: #D5E8D4;   /* Vert sauge pour les fonds de badges */
+
+    /* Éléments UI */
+    --border-color: #E0E0E0;
+    --shadow: rgba(109, 7, 26, 0.1); /* Ombre légère teintée bordeaux */
+}
+
+/* --- THÈME SOMBRE --- */
+[data-theme="dark"] {
+    --bg-color: #1A0A0A;          /* Bordeaux extrêmement sombre, presque noir */
+    --surface-color: #2D1414;     /* Bordeaux très sombre pour les cartes */
+    --text-main: #F1F1F1;         /* Blanc cassé */
+    --text-secondary: #BDBDBD;    /* Gris clair */
+
+    --primary: #A31D31;           /* Bordeaux légèrement plus lumineux pour le contraste */
+    --secondary: #A8E6CF;         /* On garde le même vert clair, il ressort très bien */
+    --secondary-muted: #243D34;   /* Vert sombre pour les contrastes discrets */
+
+    --border-color: #3D2525;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* --- EXEMPLE D'UTILISATION --- */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: all 0.3s ease; /* Transition douce lors du changement de thème */
+}
+
+h1, h2 {
+    color: var(--primary); /* Vos titres en Bordeaux */
+}
+
+.button-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.badge-skill {
+    background-color: var(--secondary-muted);
+    color: #1A3D30; /* Texte vert foncé pour la lisibilité */
+    border: 1px solid var(--secondary);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: underline var(--secondary) 2px; /* Soulignage vert clair stylé */
+}
+
+
+
+
+/* body {
+  font-family: 'Poppins', sans-serif;
+  background: #e200d7;
+  color: #fa00d9;
+} */
+
+.bg-vert-600 {
+  background-color: var(--vert-principal);
+}
+
+.bg-bordeaux-600 {
+  background-color: var(--bordeaux);
+}
+
+.text-vert-600 {
+  color: var(--vert-principal);
+}
+
+.text-bordeaux-600 {
+  color: var(--bordeaux);
+}
+
+.border-vert-600 {
+  border-color: var(--vert-principal);
+}
+
+.hover\:bg-vert-700:hover {
+  background-color: var(--vert-hover);
+}
+
+.hover\:bg-bordeaux-700:hover {
+  background-color: var(--bordeaux-hover);
+}
+
+/* Animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 3px;
+  background-color: var(--vert-principal);
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--vert-principal);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--vert-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+}
+
+.btn-secondary {
+  background-color: var(--bordeaux);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--bordeaux-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 30, 38, 0.3);
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Project Grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Timeline */
+.timeline-item {
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 32px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--vert-principal);
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--vert-principal);
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 28px;
+  width: 2px;
+  height: calc(100% + 8px);
+  background-color: #e5e7eb;
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+/* Skills Tags */
+.skill-tag {
+  display: inline-block;
+  background-color: #f3f4f6;
+  color: var(--vert-principal);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin: 4px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
