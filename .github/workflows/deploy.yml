@@ -35,8 +35,8 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }} # FTP username
           password: ${{ secrets.FTP_PASSWORD }} # FTP password
-          protocol: sftp
-          port: 22
+          protocol: ftps
+          port: 21
           local-dir: ./
           server-dir: /www/
           timeout: 300
