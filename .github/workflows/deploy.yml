@@ -1,32 +1,38 @@
-name: Deploy Laravel Project to o2switch
-
+name: Deploy DEV (auto)
 on:
-    push:
-      branches:
-        - main  # Trigger deployment on push to the develop branch
-    pull_request:
-      branches:
-        - main  # Deploy when a pull request to the main branch is merged
-
+  push:
+    branches: [ Development ]
 jobs:
-  web-deploy:
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          php-version: "8.3"
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          script_stop: true
+          debug: true
+          script: |
+            set -euo pipefail
+            # your server file route where your project is located
+            echo "→ cd www/"
+            cd /usr/share/nginx/html/projects/ts/ticketing_backend
+            echo "→ checkout and pull latest code"
+            git pull origin Development
+            echo "→ php artisan optimize tasks"
+            php artisan migrate
+            php artisan config:clear
+              php artisan route:clear
+            php artisan view:clear
+            php artisan cache:clear
+            php artisan optimize:clear
+            echo "✅ Deployment complete "
 
-      - name: Install Dependencies
-        run: composer install --optimize-autoloader  --no-dev  --prefer-dist --no-scripts
 
-      - name: Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
+
 
       # - name: Upload files via FTP
       #   if: github.ref == 'refs/heads/main'
@@ -56,10 +62,4 @@ jobs:
       #       END_SCRIPT
 
             # deploy to FTP server
-      - name: Deploy files to FTP
-        env:
-          FTP_HOST: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          ENV_DEPLOY: true
-        run: php artisan deploy:server production_ftp
+
