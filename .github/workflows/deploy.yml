@@ -32,8 +32,6 @@ jobs:
             echo "✅ Deployment complete "
 
 
-
-
       # - name: Upload files via FTP
       #   if: github.ref == 'refs/heads/main'
       #   uses: SamKirkland/FTP-Deploy-Action@4.3.3
