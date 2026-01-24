@@ -1,63 +1,155 @@
-name: Deploy DEV (auto)
+name: Laravel CI/CD avec FTP
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - production
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  deploy:
+  # Job de test et build
+  test-and-build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          script_stop: true
-          debug: true
-          script: |
-            set -euo pipefail
-            # your server file route where your project is located
-            echo "→ cd www/"
-            cd /usr/share/nginx/html/projects/ts/ticketing_backend
-            echo "→ checkout and pull latest code"
-            git pull origin Development
-            echo "→ php artisan optimize tasks"
-            php artisan migrate
-            php artisan config:clear
-              php artisan route:clear
-            php artisan view:clear
-            php artisan cache:clear
-            php artisan optimize:clear
-            echo "✅ Deployment complete "
+    - name: Checkout du code
+      uses: actions/checkout@v3
 
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, dom, filter, gd, json, zip
+        coverage: none
 
-      # - name: Upload files via FTP
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: SamKirkland/FTP-Deploy-Action@4.3.3
-      #   with:
-      #     server: ${{ secrets.FTP_SERVER }}
-      #     username: ${{ secrets.FTP_USERNAME }} # FTP username
-      #     password: ${{ secrets.FTP_PASSWORD }} # FTP password
-      #     protocol: ftps-legacy
-      #     port: 21
-      #     local-dir: ./
-      #     server-dir: /www/
-      #     timeout: 600
-      #     passive: true
-      #     exclude: |
-      #       **/.git*
-      #       **/.git*/**
-      #       **/node_modules/**
-      #       **/vendor/**
-      #       .htaccess
-      #       .env
-      #       cd public
-      #       if [ -d "storage" ]; then
-      #         rmdir storage
-      #       fi
-      #       quit
-      #       END_SCRIPT
+    - name: Vérifier la version PHP
+      run: php -v
 
-            # deploy to FTP server
+    - name: Copier .env
+      run: |
+        cp .env.example .env
 
+    - name: Installer les dépendances Composer
+      run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+    - name: Générer la clé d'application
+      run: php artisan key:generate
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Installer les dépendances NPM
+      run: npm ci
+
+    - name: Compiler les assets
+      run: npm run build
+
+    - name: Exécuter les tests
+      run: php artisan test
+
+    - name: Créer le répertoire de cache
+      run: |
+        mkdir -p bootstrap/cache
+        chmod -R 775 bootstrap/cache
+
+    - name: Optimiser Laravel pour la production
+      run: |
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+
+  # Job de déploiement via FTP
+  deploy-ftp:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Installer les dépendances Composer (production)
+      run: composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Installer et compiler les assets
+      run: |
+        npm ci
+        npm run build
+
+    - name: Créer le fichier .env de production
+      run: |
+        echo "APP_NAME=${{ secrets.APP_NAME }}" > .env
+        echo "APP_ENV=production" >> .env
+        echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
+        echo "APP_DEBUG=false" >> .env
+        echo "APP_URL=${{ secrets.APP_URL }}" >> .env
+        echo "" >> .env
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+        echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=21" >> .env
+
+    - name: Préparer les fichiers pour le déploiement
+      run: |
+        # Supprimer les fichiers non nécessaires
+        rm -rf .git .github tests node_modules .env.example .gitignore .editorconfig phpunit.xml
+
+    - name: Déploiement FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: 21
+        protocol: ftps # Utilisez 'ftp' si FTPS n'est pas disponible
+        local-dir: ./
+        server-dir: /public_html/ # Ajustez selon votre structure
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/tests/**
+          **/.github/**
+          **/.env.example
+          **/storage/logs/**
+
+    # - name: Exécuter les commandes post-déploiement via SSH (optionnel)
+    #   uses: appleboy/ssh-action@master
+    #   if: secrets.SSH_HOST != ''
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     password: ${{ secrets.SSH_PASSWORD }}
+    #     port: ${{ secrets.SSH_PORT }}
+    #     script: |
+    #       cd /public_html
+    #       php artisan migrate --force
+    #       php artisan config:cache
+    #       php artisan route:cache
+    #       php artisan view:cache
+    #       chmod -R 775 storage bootstrap/cache
+
+    # - name: Notification de succès
+    #   if: success()
+    #   run: echo "✅ Déploiement réussi sur le serveur FTP!"
+
+    # - name: Notification d'échec
+    #   if: failure()
+    #   run: echo "❌ Le déploiement a échoué!"
