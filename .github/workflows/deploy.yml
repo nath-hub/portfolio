@@ -38,6 +38,15 @@ jobs:
     - name: Générer la clé d'application
       run: php artisan key:generate
 
+    # - name: Configurer la base de données SQLite pour les tests
+    #   run: |
+    #     touch database/database.sqlite
+    #     echo "DB_CONNECTION=sqlite" >> .env
+    #     echo "DB_DATABASE=database/database.sqlite" >> .env
+
+    - name: Exécuter les migrations
+      run: php artisan migrate --force
+
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -91,8 +100,8 @@ jobs:
         npm ci
         npm run build
 
-    - name: Créer le fichier .env de production
-      run: |
+    # - name: Créer le fichier .env de production
+      # run: |
         # echo "APP_NAME=${{ secrets.APP_NAME }}" > .env
         # echo "APP_ENV=production" >> .env
         # echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
@@ -104,7 +113,7 @@ jobs:
         # echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
         # echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
         # echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-        # echo "DB_PASSWORD=21" >> .env
+        # echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
     - name: Préparer les fichiers pour le déploiement
       run: |
@@ -120,7 +129,7 @@ jobs:
         port: 21
         protocol: ftps # Utilisez 'ftp' si FTPS n'est pas disponible
         local-dir: ./
-        server-dir: /public_html/ # Ajustez selon votre structure
+        server-dir: /www # Ajustez selon votre structure
         exclude: |
           **/.git*
           **/.git*/**
@@ -146,10 +155,10 @@ jobs:
     #       php artisan view:cache
     #       chmod -R 775 storage bootstrap/cache
 
-    # - name: Notification de succès
-    #   if: success()
-    #   run: echo "✅ Déploiement réussi sur le serveur FTP!"
+    - name: Notification de succès
+      if: success()
+      run: echo "✅ Déploiement réussi sur le serveur FTP!"
 
-    # - name: Notification d'échec
-    #   if: failure()
-    #   run: echo "❌ Le déploiement a échoué!"
+    - name: Notification d'échec
+      if: failure()
+      run: echo "❌ Le déploiement a échoué!"
