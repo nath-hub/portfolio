@@ -129,7 +129,7 @@ jobs:
         port: 21
         protocol: ftps # Utilisez 'ftp' si FTPS n'est pas disponible
         local-dir: ./
-        server-dir: /www # Ajustez selon votre structure
+        server-dir: /www/ # Ajustez selon votre structure
         exclude: |
           **/.git*
           **/.git*/**
