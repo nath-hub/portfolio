@@ -126,8 +126,15 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        port: 21
-        protocol: ftps # Utilisez 'ftp' si FTPS n'est pas disponible
+
+        port: 22
+        local_path: ./
+        remote_path: /
+        sftp_only: true
+        args: '-o ConnectTimeout=5'
+
+
+        # protocol: ftps # Utilisez 'ftp' si FTPS n'est pas disponible
         local-dir: ./
         server-dir: /www/ # Ajustez selon votre structure
         exclude: |
