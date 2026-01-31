@@ -2,54 +2,47 @@
 
 @section('title', 'Projets - Nathalie')
 
+@push('styles')
+    @vite(['resources/css/projets.css'])
+@endpush
+
+@push('scripts')
+    @vite(['resources/js/projets.js'])
+@endpush
+
 @section('content')
-<div class="mb-12 fade-in">
-  <h1 class="text-4xl md:text-5xl font-bold text-vert-600 mb-4">Mes Projets</h1>
-  <p class="text-lg text-gray-600">Découvrez une sélection de mes réalisations en développement backend et full stack.</p>
-</div>
 
-@if($projects->count() > 0)
-  <div class="project-grid">
-    @foreach($projects as $project)
-      <div class="card fade-in">
-        @if($project->image)
-          <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}" class="w-full h-48 object-cover rounded-lg mb-4">
-        @else
-          <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-            <span class="text-gray-400 text-4xl">💼</span>
-          </div>
-        @endif
 
-        <h3 class="text-xl font-semibold text-bordeaux-600 mb-2">{{ $project->title }}</h3>
+    {{-- @if ($projects->count() > 0) --}}
+        <main class="projects-container">
+            <div class="hero-projects">
+                <h1>Mes Projets</h1>
+                <p>Une sélection de mes réalisations les plus marquantes au fil des années</p>
+            </div>
 
-        <p class="text-gray-600 mb-4 line-clamp-3">{{ $project->description }}</p>
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all"><span>Tous</span></button>
+                <button class="filter-btn" data-filter="web"><span>Web App</span></button>
+                <button class="filter-btn" data-filter="mobile"><span>Mobile</span></button>
+                <button class="filter-btn" data-filter="ecommerce"><span>E-commerce</span></button>
+                <button class="filter-btn" data-filter="saas"><span>SaaS</span></button>
+            </div>
 
-        @if($project->stack)
-          <div class="flex flex-wrap gap-2 mb-4">
-            @foreach(explode(',', $project->stack) as $tech)
-              <span class="skill-tag">{{ trim($tech) }}</span>
-            @endforeach
-          </div>
-        @endif
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Les projets seront générés dynamiquement -->
+            </div>
 
-        <div class="flex gap-3">
-          <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary text-sm py-2 px-4">
-            Voir détails
-          </a>
-          @if($project->link)
-            <a href="{{ $project->link }}" target="_blank" class="btn btn-secondary text-sm py-2 px-4">
-              Démo →
-            </a>
-          @endif
+            <div class="load-more-container">
+                <button class="load-more-btn" id="loadMoreBtn">Voir Plus de Projets</button>
+                <p class="project-count">Affichage de <span id="currentCount">6</span> sur <span id="totalCount">18</span>
+                    projets</p>
+            </div>
+        </main>
+    {{-- @else
+        <div class="card text-center py-12">
+            <div class="text-6xl mb-4">🚧</div>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-2">Projets en cours d'ajout</h3>
+            <p class="text-gray-600">Revenez bientôt pour découvrir mes réalisations !</p>
         </div>
-      </div>
-    @endforeach
-  </div>
-@else
-  <div class="card text-center py-12">
-    <div class="text-6xl mb-4">🚧</div>
-    <h3 class="text-2xl font-semibold text-gray-700 mb-2">Projets en cours d'ajout</h3>
-    <p class="text-gray-600">Revenez bientôt pour découvrir mes réalisations !</p>
-  </div>
-@endif
+    @endif --}}
 @endsection
