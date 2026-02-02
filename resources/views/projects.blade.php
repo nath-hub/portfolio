@@ -6,6 +6,11 @@
     @vite(['resources/css/projets.css'])
 @endpush
 
+<script>
+    // Passer les projets de la BD à JavaScript
+    window.projectsData = @json($projects);
+</script>
+
 @push('scripts')
     @vite(['resources/js/projets.js'])
 @endpush

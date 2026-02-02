@@ -4,6 +4,10 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/contact.css']); ?>
 <?php $__env->stopPush(); ?>
 
+<script>
+    window.contactRoute = "<?php echo e(route('contact.send')); ?>";
+</script>
+
 <?php $__env->startPush('scripts'); ?>
     <?php echo app('Illuminate\Foundation\Vite')(['resources/js/contact.js']); ?>
 <?php $__env->stopPush(); ?>

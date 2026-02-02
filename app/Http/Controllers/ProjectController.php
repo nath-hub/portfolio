@@ -17,6 +17,11 @@ class ProjectController extends Controller
     public function show($slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        return view('projects.show', compact('project'));
+        
+        // Récupérer les projets suivant et précédent pour la navigation
+        $nextProject = Project::where('id', '>', $project->id)->first();
+        $prevProject = Project::where('id', '<', $project->id)->orderBy('id', 'desc')->first();
+
+        return view('projects.show', compact('project', 'nextProject', 'prevProject'));
     }
 }

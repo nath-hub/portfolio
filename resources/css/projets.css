@@ -399,6 +399,39 @@
             }
         }
 
+        /* Styles pour le lien du projet */
+        .project-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+        }
+
+        .project-actions {
+            padding-top: 15px;
+            border-top: 1px solid rgba(250, 0, 217, 0.1);
+            margin-top: 15px;
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--gradient-1);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .view-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
         @media (max-width: 1200px) {
             .projects-grid {
                 grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

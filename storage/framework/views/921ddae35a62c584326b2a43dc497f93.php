@@ -15,11 +15,11 @@
         </a>
         <nav>
             <ul>
-                <li><a href="<?php echo e(route('home')); ?>" class="active">Accueil</a></li>
-                <li><a href="<?php echo e(route('projects')); ?>">Projets</a></li>
-                <li><a href="<?php echo e(route('education')); ?>">Formation</a></li>
-                <li><a href="<?php echo e(route('contact')); ?>">Contact</a></li>
-                <li><a href="<?php echo e(route('about')); ?>">À propos</a></li>
+                <li><a href="<?php echo e(route('home')); ?>" class="<?php echo e(request()->routeIs('home') ? 'active' : ''); ?>">Accueil</a></li>
+                <li><a href="<?php echo e(route('projects')); ?>" class="<?php echo e(request()->routeIs('projects') ? 'active' : ''); ?>">Projets</a></li>
+                <li><a href="<?php echo e(route('education')); ?>" class="<?php echo e(request()->routeIs('education') ? 'active' : ''); ?>">Formation</a></li>
+                <li><a href="<?php echo e(route('contact')); ?>" class="<?php echo e(request()->routeIs('contact') ? 'active' : ''); ?>">Contact</a></li>
+                <li><a href="<?php echo e(route('about')); ?>" class="<?php echo e(request()->routeIs('about') ? 'active' : ''); ?>">À propos</a></li>
             </ul>
         </nav>
         <button class="theme-toggle" aria-label="Toggle theme">🌙</button>

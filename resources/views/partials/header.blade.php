@@ -15,11 +15,11 @@
         </a>
         <nav>
             <ul>
-                <li><a href="{{ route('home') }}" class="active">Accueil</a></li>
-                <li><a href="{{ route('projects') }}">Projets</a></li>
-                <li><a href="{{ route('education') }}">Formation</a></li>
-                <li><a href="{{ route('contact') }}">Contact</a></li>
-                <li><a href="{{ route('about') }}">À propos</a></li>
+                <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Accueil</a></li>
+                <li><a href="{{ route('projects') }}" class="{{ request()->routeIs('projects') ? 'active' : '' }}">Projets</a></li>
+                <li><a href="{{ route('education') }}" class="{{ request()->routeIs('education') ? 'active' : '' }}">Formation</a></li>
+                <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
+                <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">À propos</a></li>
             </ul>
         </nav>
         <button class="theme-toggle" aria-label="Toggle theme">🌙</button>

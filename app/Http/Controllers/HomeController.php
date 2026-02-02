@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactMessageMail;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Education;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class HomeController extends Controller
 {
@@ -33,7 +37,7 @@ class HomeController extends Controller
 
     public function education()
     {
-        $educations = Education::orderBy('year','desc')->get();
+        $educations = Education::orderBy('year', 'desc')->get();
         return view('education', compact('educations'));
     }
 
@@ -44,23 +48,41 @@ class HomeController extends Controller
 
     public function sendContact(Request $request)
     {
-        $data = $request->validate([
-            'name'=>'required|string|max:255',
-            'email'=>'required|email',
-            'message'=>'required|string'
-        ]);
+        try {
+            $data = $request->validate([
+                'email' => 'required|email',
+                'message' => 'required|string',
+                'name' => 'required|string|max:255',
+                'subject' => 'required|string|max:255',
+                'phone' => 'nullable|string'
+            ]);
 
-        // simple mail to site owner (configure MAIL_* in .env)
-        Mail::raw("Message de {$data['name']} ({$data['email']}):\n\n{$data['message']}", function($m) use ($data){
-            $m->to(config('mail.from.address'))
-              ->subject("Contact portfolio — {$data['name']}");
-        });
+            // 2. Sauvegarde en BD
+            Contact::create($data);
 
-        return back()->with('success','Merci — votre message a été envoyé.');
+            // 3. Envoi de l'email
+            Mail::to('floretaffot@gmail.com')->send(
+                new ContactMessageMail($data)
+            );
+
+            return response()->json(['success' => true, 'message' => 'Merci — votre message a été envoyé.'], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur de validation.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Contact form error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'envoi du message. Veuillez réessayer plus tard.'
+            ], 500);
+        }
     }
 
 
-      public function index()
+    public function index()
     {
         $projects = Project::orderBy('created_at', 'desc')->get();
         return view('projects', compact('projects'));

@@ -20,6 +20,8 @@
 
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 
     <?php echo $__env->yieldPushContent('styles'); ?>

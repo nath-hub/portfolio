@@ -20,6 +20,8 @@
 
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')

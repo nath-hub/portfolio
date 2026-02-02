@@ -20,60 +20,60 @@ const successMessage = document.getElementById("successMessage");
 contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Récupération des données
-    const formData = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        subject: document.getElementById("subject").value,
-        message: document.getElementById("message").value,
-    };
-
-    // Validation simple
-    if (
-        !formData.name ||
-        !formData.email ||
-        !formData.subject ||
-        !formData.message
-    ) {
-        alert("Veuillez remplir tous les champs obligatoires");
-        return;
-    }
-
-    // Validation email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-        alert("Veuillez entrer une adresse email valide");
-        return;
-    }
-
-    // Simulation d'envoi
     const submitBtn = contactForm.querySelector(".btn-submit");
     const originalText = submitBtn.innerHTML;
+
+    // On récupère les données du formulaire
+    const formData = new FormData(this);
+
     submitBtn.disabled = true;
     submitBtn.innerHTML = "<span>Envoi en cours...</span>";
 
-    // Simulation du délai d'envoi
-    setTimeout(() => {
-        // Affichage du message de succès
-        successMessage.classList.add("show");
+    // Envoi via Fetch API vers Laravel
+    fetch(window.contactRoute, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+            Accept: "application/json",
+        },
+        body: formData,
+    })
+        .then((response) => response.json().then((data) => ({ ok: response.ok, status: response.status, data })))
+        .then(({ ok, status, data }) => {
+            if (ok && data.success) {
+                // Affichage du message de succès
+                successMessage.classList.add("show");
 
-        // Réinitialisation du formulaire
-        contactForm.reset();
-        formGroups.forEach((group) => group.classList.remove("filled"));
+                // Réinitialisation du formulaire
+                contactForm.reset();
+                formGroups.forEach((group) => group.classList.remove("filled"));
 
-        // Restauration du bouton
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
+                // Scroll vers le message de succès
+                successMessage.scrollIntoView({ behavior: "smooth", block: "center" });
 
-        // Masquage du message après 5 secondes
-        setTimeout(() => {
-            successMessage.classList.remove("show");
-        }, 5000);
-
-        // Scroll vers le message de succès
-        successMessage.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 1000);
+                // Masquage du message après 5 secondes
+                setTimeout(() => {
+                    successMessage.classList.remove("show");
+                }, 5000);
+            } else if (status === 422 && data.errors) {
+                // Afficher erreurs de validation
+                const messages = Object.values(data.errors).flat().join('\n');
+                alert("Erreurs de validation:\n" + messages);
+            } else {
+                console.error("Erreur serveur:", data.message || data);
+                alert("Erreur: " + (data.message || "Impossible d'envoyer le message"));
+            }
+        })
+        .catch((error) => {
+            console.error("Erreur réseau:", error);
+            alert("Erreur lors de l'envoi. Veuillez réessayer.");
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        });
 });
 
 // Animation au scroll pour les cartes

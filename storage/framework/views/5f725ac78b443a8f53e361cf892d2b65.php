@@ -4,6 +4,11 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/projets.css']); ?>
 <?php $__env->stopPush(); ?>
 
+<script>
+    // Passer les projets de la BD à JavaScript
+    window.projectsData = <?php echo json_encode($projects, 15, 512) ?>;
+</script>
+
 <?php $__env->startPush('scripts'); ?>
     <?php echo app('Illuminate\Foundation\Vite')(['resources/js/projets.js']); ?>
 <?php $__env->stopPush(); ?>

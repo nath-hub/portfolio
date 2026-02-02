@@ -6,6 +6,10 @@
     @vite(['resources/css/contact.css'])
 @endpush
 
+<script>
+    window.contactRoute = "{{ route('contact.send') }}";
+</script>
+
 @push('scripts')
     @vite(['resources/js/contact.js'])
 @endpush
